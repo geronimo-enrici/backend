@@ -1,20 +1,24 @@
+# 1. SDK para compilar
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
-# Copia los archivos y restaura dependencias
+# Copiamos TODO el contenido de tu repositorio al contenedor
 COPY . .
-RUN dotnet restore
 
-# Publica el proyecto
-RUN dotnet publish -c Release -o out
+# Ejecutamos el restore apuntando específicamente a la carpeta donde está el proyecto
+# (Ajustado a tu carpeta "prueba")
+RUN dotnet restore "prueba/prueba.csproj"
 
-# Imagen de ejecución
+# Publicamos el proyecto
+RUN dotnet publish "prueba/prueba.csproj" -c Release -o out
+
+# 2. Runtime para ejecutar
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/out .
 
-# Expone el puerto que usa Render (8080 por defecto en Docker)
-ENV ASPNETCORE_URLS=http://+:8080
+# Render usa puertos dinámicos, pero exponemos los comunes
+EXPOSE 80
 EXPOSE 8080
 
-ENTRYPOINT ["dotnet", "TuProyecto.dll"]
+ENTRYPOINT ["dotnet", "prueba.dll"]
