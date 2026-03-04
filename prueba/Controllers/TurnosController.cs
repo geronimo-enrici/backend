@@ -20,10 +20,21 @@ namespace prueba.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTurnos()
         {
-            var turnos = await _context.Turnos.ToListAsync();
-            return Ok(turnos);
+            try
+            {
+                List<Turno> turnos = await _context.Turnos.ToListAsync();
+                return Ok(turnos);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error en GetTurnos: {ex.Message}");
+                if (ex.InnerException != null)
+                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+
+                return StatusCode(500, new { mensaje = "Error en el servidor", detalle = ex.Message });
+            }
         }
-        
+
         [HttpPost]
         public async Task<IActionResult> PostTurno([FromBody] Turno turno)
         {

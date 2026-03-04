@@ -5,6 +5,7 @@
         public int Id { get; set; }
         public string MascotaNombre { get; set; } = string.Empty;
         public DateTime FechaHora { get; set; }
-        public string Tipo { get; set; } = string.Empty; 
+        public string Tipo { get; set; } = string.Empty;
+        public string? Comentarios { get; set; }
     }
 }
