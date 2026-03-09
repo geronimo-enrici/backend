@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using prueba.Models;
-using TuProyecto.Models;
 
 namespace MascotasApi;
 
