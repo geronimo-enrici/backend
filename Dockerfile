@@ -1,24 +1,22 @@
-# 1. SDK para compilar
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+# ETAPA 1: Compilación (SDK 6.0)
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /app
 
-# Copiamos TODO el contenido de tu repositorio al contenedor
+# Copiamos todo el contenido para que encuentre el .csproj
 COPY . .
 
-# Ejecutamos el restore apuntando específicamente a la carpeta donde está el proyecto
-# (Ajustado a tu carpeta "prueba")
-RUN dotnet restore "prueba/prueba.csproj"
+# Restauramos y publicamos buscando el archivo .csproj automáticamente
+RUN dotnet restore $(find . -name "*.csproj")
+RUN dotnet publish $(find . -name "*.csproj") -c Release -o out
 
-# Publicamos el proyecto
-RUN dotnet publish "prueba/prueba.csproj" -c Release -o out
-
-# 2. Runtime para ejecutar
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+# ETAPA 2: Ejecución (Runtime 6.0 - Esto es lo que te faltaba)
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
 COPY --from=build /app/out .
 
-# Render usa puertos dinámicos, pero exponemos los comunes
+# Render usa puertos dinámicos, pero exponemos los estándar
 EXPOSE 80
 EXPOSE 8080
 
+# Comando para iniciar la app (asegúrate de que el archivo sea prueba.dll)
 ENTRYPOINT ["dotnet", "prueba.dll"]
