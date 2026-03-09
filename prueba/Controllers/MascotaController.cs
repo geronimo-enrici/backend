@@ -209,4 +209,27 @@ public class MascotasController : ControllerBase
         public bool Aplicada { get; set; }
         public DateTime? Fecha { get; set; }
     }
+    [HttpGet("{id}/historial")]
+    public async Task<IActionResult> GetHistorial(int id)
+    {
+        var historial = await _context.HistorialesClinicos
+            .Where(h => h.MascotaId == id)
+            .OrderByDescending(h => h.Fecha)
+            .ToListAsync();
+
+        return Ok(historial);
+    }
+
+    [HttpPost("{id}/historial")]
+    public async Task<IActionResult> AgregarHistorial(int id, [FromBody] HistorialClinico nuevoRegistro)
+    {
+        if (nuevoRegistro == null) return BadRequest("Datos inválidos.");
+
+        nuevoRegistro.MascotaId = id;
+
+        _context.HistorialesClinicos.Add(nuevoRegistro);
+        await _context.SaveChangesAsync();
+
+        return CreatedAtAction(nameof(GetHistorial), new { id = nuevoRegistro.Id }, nuevoRegistro);
+    }
 }

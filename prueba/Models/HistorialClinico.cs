@@ -1,8 +1,9 @@
-﻿using System;
+﻿using MascotasApi;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TuProyecto.Models
+namespace prueba.Models
 {
     public class HistorialClinico
     {
@@ -12,20 +13,22 @@ namespace TuProyecto.Models
         [Required]
         public int MascotaId { get; set; }
 
-        public DateTime Fecha { get; set; } = DateTime.Now;
+        [Required]
+        public DateTime Fecha { get; set; }
 
         [Required]
-        [StringLength(200)]
-        public string Motivo { get; set; }
-
-        [Column(TypeName = "decimal(5, 2)")]
-        public decimal Peso { get; set; }
+        [MaxLength(100)]
+        public string Veterinario { get; set; }
 
         [Required]
+        [MaxLength(150)]
+        public string MotivoConsulta { get; set; }
+
         public string Diagnostico { get; set; }
-
         public string Tratamiento { get; set; }
+        public string Observaciones { get; set; }
 
-        public string Veterinario { get; set; } = "Personal Médico";
+        [ForeignKey("MascotaId")]
+        public Mascota? Mascota { get; set; }
     }
 }
