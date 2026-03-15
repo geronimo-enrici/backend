@@ -209,6 +209,8 @@ public class MascotasController : ControllerBase
         public bool Aplicada { get; set; }
         public DateTime? Fecha { get; set; }
     }
+
+
     [HttpGet("{id}/historial")]
     public async Task<IActionResult> GetHistorial(int id)
     {
