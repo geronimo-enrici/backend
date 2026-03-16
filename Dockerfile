@@ -1,5 +1,5 @@
 # 1. SDK para compilar
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /app
 
 # Copiamos TODO el contenido de tu repositorio al contenedor
@@ -13,7 +13,7 @@ RUN dotnet restore "prueba/prueba.csproj"
 RUN dotnet publish "prueba/prueba.csproj" -c Release -o out
 
 # 2. Runtime para ejecutar
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
 WORKDIR /app
 COPY --from=build /app/out .
 
